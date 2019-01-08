@@ -8,6 +8,7 @@
 
 namespace DhDoc;
 
+define('BASE_PATH',str_replace('\\','/',realpath(dirname(__FILE__).'/'))."/");
 
 class dhDoc
 {
@@ -65,7 +66,11 @@ class dhDoc
             return false;
         }
 
+        $path = BASE_PATH.'/markdown/';
+
         $fullTable = '';
+
+        $i = 0;
         foreach ($this->tables as $tk => $tv) {
             $fullTableHeader = '|字段名|类型(长度/小数)|为空|额外|默认|备注|'.PHP_EOL.'|:---|:---|:---|:---|:---|:---|:---|'.PHP_EOL;
             $fullFieldsql = "SHOW FULL fields FROM " . $tv;
@@ -76,8 +81,14 @@ class dhDoc
                 $thisTables = $fullTableHeader.$tableString.'***'.PHP_EOL;
             }
             $fullTable .= $thisTables;
+
+            $fileName = $tv.'md';
+            file_put_contents($path.$fileName, $fullTable);
+            $i++;
         }
 
-        return $fullTable;
+
+
+        return $i;
     }
 }
